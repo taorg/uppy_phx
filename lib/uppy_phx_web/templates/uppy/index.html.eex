@@ -1,0 +1,98 @@
+<!-- -->
+     <script>
+         function init() {
+         websocket = new WebSocket("ws://localhost:3001/api/ssss");
+
+         websocket.onopen = function() {
+           document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"; };
+
+         websocket.onmessage = function(evt) {
+           document.getElementById("output").innerHTML += "<p style='color: blue;'>> RESPONSE: " + evt.data + "</p>"; };
+
+         websocket.onerror = function(evt) {
+           document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; };
+         }
+
+         function sendMessage(message) {
+           document.getElementById("output").innerHTML += "<p>> SENT: " + message + "</p>";
+
+         websocket.send(message);
+         }
+
+         window.addEventListener("load", init, false);
+     </script>
+
+<div class="row">
+ <div class="col s12">
+     <input onkeypress="if(this.value) {if (window.event.keyCode == 13) { sendMessage(this.value); this.value = null; }}"/>
+     <div id="output"></div>
+</div>
+</div>
+<div class="row">
+ <div class="col s12">
+ <button id="uppyModalOpener">Open Modal</button>
+ <div id="idUppyParent" class="UppyParent">
+   <form class="UppyForm" action="/">
+   <!--
+     <input type="file" />
+     <button type="submit">Upload</button>
+     -->
+   </form>
+ </div>
+</div>
+</div>
+<!--
+<script src="https://unpkg.com/uppy/dist/uppy.js"></script>
+-->
+
+<script src="<%= static_path(@conn, "/js/uppy.js") %>"></script>
+<script>
+
+
+const PROTOCOL = location.protocol === 'https:' ? 'https' : 'http'
+const TUS_ENDPOINT = PROTOCOL + '://localhost:3001/umedia'
+//const PROTOCOL = 'https'
+//const TUS_ENDPOINT = PROTOCOL + '://localhost:3020/files'
+
+function uppyInit () {
+const uppy = Uppy.Core({debug: true, autoProceed: true, allowPause: true})
+.use(Uppy.Dashboard, {
+ inline: true,
+ target: '#idUppyParent',
+ locale: {
+   strings: {browse: 'wow'}
+ }
+})
+//.use(Uppy.GoogleDrive, {target: Uppy.Dashboard, host: 'http://localhost:3001'})
+//.use(Uppy.Dropbox, {target: Uppy.Dashboard, host: 'http://localhost:3020'})
+.use(Uppy.Dropbox, {target: Uppy.Dashboard, host: 'http://localhost:3001'})
+// .use(FileInput, {target: '.Uppy', locale: {
+//   strings: {selectToUpload: 'хуй'}
+// }})
+//.use(Uppy.DragDrop, {target: 'body', locale: {
+//   strings: {chooseFile: 'hmm'}
+// }})
+.use(Uppy.ProgressBar, {target: '#idUppyParent'})
+.use(Uppy.Webcam, {target: Uppy.Dashboard})
+//.use(Uppy.Multipart, {endpoint: '//localhost:3001/media/'})
+.use(Uppy.Tus10, {endpoint: TUS_ENDPOINT, resume: true, allowPause: true})
+.use(Uppy.Informer, {target: Uppy.Dashboard})
+.use(Uppy.MetaData, {
+ fields: [
+   { id: 'tags', name: 'Tags', value: '', placeholder: 'add tags separated by ,' },
+   { id: 'description', name: 'Description', value: 'none', placeholder: 'describe what the file is for' }
+ ]
+})
+uppy.run()
+
+uppy.on('core:success', (fileCount) => {
+console.log('бля!')
+console.log(fileCount)
+})
+
+uppy.emit('informer', 'Smile!', 'info', 2000)
+}
+uppyInit()
+window.uppyInit = uppyInit
+
+</script>

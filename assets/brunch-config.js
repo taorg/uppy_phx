@@ -4,6 +4,7 @@ exports.config = {
     javascripts: {
         joinTo: {
             "js/app.js": /^(js)|(node_modules)/,
+            "js/uppy.js": ["node_modules/uppy/dist/uppy.js"],
         },
       // To use a separate vendor.js bundle, specify two files path
       // http://brunch.io/docs/config#-files-
@@ -52,14 +53,14 @@ exports.config = {
   plugins: {
     babel: {
       // Do not use ES6 compiler in vendor code
-      ignore: [/vendor/]
+      ignore: [/vendor/, "node_modules/uppy/dist/uppy.js"]
     },
     sass: {
         mode: "native",
         options: {
             includePaths: ['node_modules/materialize-css/sass']
         }
-    }    
+    }
   },
 
   modules: {
@@ -71,13 +72,16 @@ exports.config = {
   npm: {
       enabled: true,
       whitelist: ["phoenix", "phoenix_html"],
-
+      styles: {
+          "uppy": ["dist/uppy.css"]
+      },
       globals: {
           $: "jquery",
           jQuery: "jquery",
       },
       static: [
           "node_modules/materialize-css/dist/js/materialize.js",
+          "node_modules/uppy/dist/uppy.js"
       ]
   }
 };
