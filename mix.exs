@@ -39,7 +39,7 @@ defmodule UppyPhx.Mixfile do
     [
      {:cowboy, "~> 1.0"},
      {:drab, "~> 0.5"},
-     {:exfmt, "~> 0.4"},
+     {:exfmt, "~> 0.5"},
      {:gettext, "~> 0.11"},
      {:httpoison, "~> 0.13"},
      {:oauth2, "~> 0.9"},
